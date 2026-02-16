@@ -6,7 +6,7 @@ import random
 import os
 from collections import deque
 
-# ------------------ PATH SETUP (IMPORTANT FIX) ------------------
+# ------------------ PATH SETUP ------------------
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -32,6 +32,7 @@ def find_zero(state):
 
 def state_to_tuple(state):
     return tuple(state[r][c] for r in range(3) for c in range(3))
+
 
 
 
@@ -102,7 +103,7 @@ class PuzzleApp:
         boards = tk.Frame(center, bg=BG_COLOR)
         boards.pack()
 
-        self.user_tiles = self.create_board(boards, "USER",             self.move_user)
+        self.user_tiles = self.create_board(boards, "USER", self.move_user)
         self.dnc_tiles  = self.create_board(boards, "DIVIDE & CONQUER", None)
 
         controls = tk.Frame(center, bg=BG_COLOR)
@@ -222,7 +223,6 @@ class PuzzleApp:
         if i < len(path):
             state = path[i]
 
-            # Show which D&C phase (subproblem) is currently being solved
             row0_done = all(state[0][c] == GOAL[0][c] for c in range(3))
             row1_done = all(state[1][c] == GOAL[1][c] for c in range(3))
 
@@ -243,3 +243,10 @@ class PuzzleApp:
             self.root.after(400, lambda: self.animate_dnc(path, i + 1))
         else:
             self.phase_lbl.config(text="D&C: All 3 subproblems solved!")
+
+# ------------------ MAIN ------------------
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    PuzzleApp(root)
+    root.mainloop()
