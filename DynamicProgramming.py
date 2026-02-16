@@ -33,3 +33,33 @@ def find_zero(state):
             if state[r][c] == 0:
                 return r, c
 
+# ---------- GAMEPLAY ----------
+
+def move_user(self, r, c):
+zr, zc = find_zero(self.user_state)
+if abs(r - zr) + abs(c - zc) == 1:
+    self.user_state[zr][zc], self.user_state[r][c] = \
+        self.user_state[r][c], 0
+    self.user_steps += 1
+    self.update_boards()
+
+    if self.user_state == GOAL:
+        messagebox.showinfo(
+            "User Solved",
+            f"You solved it in {self.user_steps} steps!")
+
+def shuffle(self):
+state = deepcopy(GOAL)
+for _ in range(150):
+    zr, zc = find_zero(state)
+    dr, dc = random.choice(DIRS)
+    nr, nc = zr + dr, zc + dc
+    if 0 <= nr < 3 and 0 <= nc < 3:
+        state[zr][zc], state[nr][nc] = state[nr][nc], 0
+
+self.user_state = deepcopy(state)
+self.ai_state = deepcopy(state)
+self.user_steps = 0
+self.ai_steps = 0
+self.update_boards()
+
