@@ -33,6 +33,58 @@ def find_zero(state):
 def state_to_tuple(state):
     return tuple(state[r][c] for r in range(3) for c in range(3))
 
+# PURE DIVIDE & CONQUER SOLVER 
+
+def bfs_to_partial_goal(start, target_tiles, locked_rows):
+   
+
+    goal_positions = {v: divmod(v - 1, 3) for v in range(1, 9)}
+
+    def is_subgoal_reached(state):
+        for v in target_tiles:
+            gr, gc = goal_positions[v]
+            if state[gr][gc] != v:
+                return False
+        return True
+
+    def locked_rows_intact(state):
+        for row in locked_rows:
+            for col in range(3):
+                if state[row][col] != GOAL[row][col]:
+                    return False
+        return True
+
+    queue = deque()
+    queue.append((start, [start], 0))
+
+    MAX_DEPTH = 30   # prevents infinite expansion
+
+    while queue:
+        state, path, depth = queue.popleft()
+
+        if is_subgoal_reached(state):
+            return path
+
+        if depth > MAX_DEPTH:
+            continue
+
+        zr, zc = find_zero(state)
+
+        for dr, dc in DIRS:
+            nr, nc = zr + dr, zc + dc
+            if 0 <= nr < 3 and 0 <= nc < 3:
+                nxt = deepcopy(state)
+                nxt[zr][zc], nxt[nr][nc] = nxt[nr][nc], 0
+
+                if not locked_rows_intact(nxt):
+                    continue
+
+                # intentionally NO visited set
+                # forces recomputation of overlapping states
+
+                queue.append((nxt, path + [nxt], depth + 1))
+
+    return [start]
 
 
 def dnc_solver(start):
