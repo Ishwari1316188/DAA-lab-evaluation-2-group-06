@@ -33,6 +33,30 @@ def neighbors(state):
             res.append(tuple(lst))
     return res
 
+# A* SOLVER (CONQUER STEP)
+def astar(start, goal_check):
+
+    pq=[]
+    heapq.heappush(pq,(h(start),0,start,[start]))
+    visited=set()
+
+    while pq:
+        f,g,state,path=heapq.heappop(pq)
+
+        if goal_check(state):
+            return path
+
+        if state in visited:
+            continue
+        visited.add(state)
+
+        for nxt in neighbors(state):
+            if nxt not in visited:
+                heapq.heappush(pq,(g+1+h(nxt),g+1,nxt,path+[nxt]))
+
+    return None  
+
+
 # HEURISTIC
 def h(state):
     dist=0
