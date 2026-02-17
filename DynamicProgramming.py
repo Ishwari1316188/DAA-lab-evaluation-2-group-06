@@ -49,7 +49,19 @@ def build_dp_table():
                     dp_table[nxt] = curr
                     queue.append(nxt)
 
+def reconstruct_path(start):
+    if start not in dp_table:
+        return []
 
+    path = [start]
+    curr = start
+
+    while curr != GOAL_STATE:
+        curr = dp_table[curr]
+        path.append(curr)
+
+    return path
+    
 class PuzzleApp:
     def __init__(self, root):
         self.root = root
